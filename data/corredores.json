@@ -1,5 +1,5 @@
 {
- "generado_con": "uv run python -m traffic.corredores",
+ "generado_con": "uv run python -m open_jam.corredores",
  "largo_m": 1500,
  "corredores": [
   {

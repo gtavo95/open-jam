@@ -1,7 +1,6 @@
 // @ts-check
-// Normalización de lo que exporta Python al formato que usa el visor. Acepta el
-// contrato nuevo (manifest v2, ventanas y decisiones por periodo) y el formato viejo
-// (<id>.json + <id>.bin, corredores como diccionario) mientras conviven.
+// Validación y normalización de lo que exporta Python (manifest, red y meta.json de
+// cada escenario) al formato que usa el visor.
 
 import { ErrorDatos } from "./errores.js";
 
@@ -13,18 +12,6 @@ import { ErrorDatos } from "./errores.js";
 
 export const PERIODO_S = 900;
 
-/** Manifest equivalente al formato viejo: on y off fijos, un .bin por escenario. */
-export const MANIFEST_LEGADO = /** @type {Manifest} */ ({
-  version: 1,
-  red: "red.json",
-  escena: "escena.json",
-  terreno: "terreno.bin",
-  escenarios: [
-    { id: "on", titulo: "Semáforos encendidos", meta: "on.json" },
-    { id: "off", titulo: "Semáforos apagados", meta: "off.json" },
-  ],
-});
-
 /**
  * @param {any} m
  * @param {string} url
@@ -33,7 +20,7 @@ export const MANIFEST_LEGADO = /** @type {Manifest} */ ({
 export function validarManifest(m, url) {
   const mal = (/** @type {string} */ que) => new ErrorDatos("formato", `${url}: ${que}`, url);
   if (!m || typeof m !== "object") throw mal("no es un objeto");
-  if (m.version !== 2) throw mal(`versión ${m.version} no soportada (se espera 2)`);
+  if (m.version !== 1) throw mal(`versión ${m.version} no soportada (se espera 1)`);
   for (const k of ["red", "escena", "terreno"]) if (typeof m[k] !== "string") throw mal(`falta "${k}"`);
   if (!Array.isArray(m.escenarios) || !m.escenarios.length) throw mal("no lista escenarios");
   for (const e of m.escenarios)
@@ -42,24 +29,22 @@ export function validarManifest(m, url) {
 }
 
 /**
- * corredores: lista {id, nombre, calles, semaforos} (nuevo) o {nombre: [calles]} (viejo,
- * sin semáforos por corredor).
+ * corredores: lista {id, nombre, calles, semaforos}.
  * @param {any} red
  * @returns {Red}
  */
 export function normalizarRed(red) {
   if (!red || !Array.isArray(red.calles) || !Array.isArray(red.semaforos))
     throw new ErrorDatos("formato", "red.json: faltan calles o semaforos");
-  const c = red.corredores ?? [];
+  if (red.corredores !== undefined && !Array.isArray(red.corredores))
+    throw new ErrorDatos("formato", "red.json: corredores no es una lista");
   /** @type {Corredor[]} */
-  const corredores = Array.isArray(c)
-    ? c.map((x) => ({
-        id: String(x.id),
-        nombre: x.nombre ?? String(x.id),
-        calles: x.calles ?? [],
-        semaforos: x.semaforos ?? [],
-      }))
-    : Object.entries(c).map(([nombre, calles]) => ({ id: nombre, nombre, calles, semaforos: [] }));
+  const corredores = (red.corredores ?? []).map((/** @type {any} */ x) => ({
+    id: String(x.id),
+    nombre: x.nombre ?? String(x.id),
+    calles: x.calles ?? [],
+    semaforos: x.semaforos ?? [],
+  }));
   return { ...red, corredores };
 }
 
@@ -80,21 +65,17 @@ export function periodosFijos(corredores, encendido, fin) {
 
 /**
  * @param {{ id: string, titulo: string }} esc  entrada del manifest
- * @param {any} meta  contenido de <id>/meta.json (o <id>.json en el formato viejo)
+ * @param {any} meta  contenido de <id>/meta.json
  * @param {Corredor[]} corredores
- * @param {{ legado: boolean, url: string }} opciones
+ * @param {string} url
  * @returns {Escenario}
  */
-export function normalizarEscenario(esc, meta, corredores, { legado, url }) {
+export function normalizarEscenario(esc, meta, corredores, url) {
   const mal = (/** @type {string} */ que) => new ErrorDatos("formato", `${url}: ${que}`, url);
   if (!meta?.metricas) throw mal("faltan las métricas");
   const fin = meta.metricas.fin_s ?? 5400;
   const politica = meta.politica ?? esc.id;
   let ventanas = meta.ventanas;
-  if (legado) {
-    if (!meta.binario) throw mal("falta el índice binario");
-    ventanas = [{ t0: 0, t1: fin, archivo: `${esc.id}.bin`, binario: meta.binario }];
-  }
   if (!Array.isArray(ventanas) || !ventanas.length) throw mal("no hay ventanas de trayectorias");
   for (const v of ventanas)
     if (typeof v.t0 !== "number" || typeof v.t1 !== "number" || typeof v.archivo !== "string" || !v.binario)
@@ -104,7 +85,7 @@ export function normalizarEscenario(esc, meta, corredores, { legado, url }) {
   /** @type {Periodo[]} */
   let periodos = meta.periodos;
   if (!Array.isArray(periodos) || !periodos.length) {
-    if (!legado && politica !== "on" && politica !== "off") throw mal("faltan los periodos con decisiones del agente");
+    if (politica !== "on" && politica !== "off") throw mal("faltan los periodos con decisiones del agente");
     periodos = periodosFijos(corredores, politica !== "off", fin);
   } else {
     for (const p of periodos) if (typeof p.t0 !== "number" || !p.decisiones) throw mal("periodo sin t0 o decisiones");

@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { estadoSemaforos } from "../src/corredores.js";
 import { decodificar } from "../src/datos/columnas.js";
-import { normalizarEscenario, normalizarRed, validarManifest } from "../src/datos/legado.js";
+import { normalizarEscenario, normalizarRed, validarManifest } from "../src/datos/formato.js";
 import { crearMuestreador } from "../src/trayectorias.js";
 
 const RAIZ = join(import.meta.dirname, "..", "fixtures", "mini");
@@ -17,7 +17,7 @@ const manifest = validarManifest(json("manifest.json"), "manifest.json");
 const red = normalizarRed(json("red.json"));
 const escenario = (id) => {
   const e = manifest.escenarios.find((x) => x.id === id);
-  return normalizarEscenario(e, json(e.meta), red.corredores, { legado: false, url: e.meta });
+  return normalizarEscenario(e, json(e.meta), red.corredores, e.meta);
 };
 const ventana = (v) => {
   const b = leer(v.archivo);

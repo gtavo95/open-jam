@@ -1,4 +1,4 @@
-// Genera fixtures/mini/: un juego de datos chico en el formato nuevo (manifest v2,
+// Genera fixtures/mini/: un juego de datos chico en el formato del visor (manifest v1,
 // ventanas de 900 s, decisiones por corredor) para los tests y para probar el visor sin
 // correr la simulación:  pnpm fixture  y después  http://localhost:5180/?datos=fixtures/mini/
 //
@@ -135,7 +135,7 @@ escribir("escena.json", escena);
 escribir("terreno.bin", new Uint8Array(alto.buffer));
 escribir("red.json", red);
 escribir("manifest.json", {
-  version: 2,
+  version: 1,
   red: "red.json",
   escena: "escena.json",
   terreno: "terreno.bin",

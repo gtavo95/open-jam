@@ -98,7 +98,7 @@ def test_manifest(export):
     m = escribir_manifest(dest, ["on"])
     assert m == json.loads((dest / "manifest.json").read_text())
     assert {k: m[k] for k in ("version", "red", "escena", "terreno")} == \
-        {"version": 2, "red": "red.json", "escena": "escena.json", "terreno": "terreno.bin"}
+        {"version": 1, "red": "red.json", "escena": "escena.json", "terreno": "terreno.bin"}
     assert m["escenarios"] == [{"id": "on", "titulo": "Semáforos encendidos", "meta": "on/meta.json"},
                                {"id": "viejo", "titulo": "viejo", "meta": "viejo/meta.json"}]
 

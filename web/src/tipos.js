@@ -60,7 +60,7 @@
 
 /**
  * @typedef {object} Manifest
- * @property {number} version  1 = formato viejo (<id>.json + <id>.bin), 2 = ventanas
+ * @property {number} version  versión del formato (1)
  * @property {string} red
  * @property {string} escena
  * @property {string} terreno

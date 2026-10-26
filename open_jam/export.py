@@ -56,7 +56,7 @@ TIPOS = {"carro": 0, "moto": 1, "bus": 2, "camion": 3}
 JERARQUIA = {"motorway": 0, "trunk": 0, "primary": 1, "secondary": 2, "tertiary": 2}
 VENTANA_S = 900  # igual al periodo del agente: cada ventana es un periodo de decisiones
 COLUMNAS = ("inicio", "tipo", "xy", "t", "v")
-VERSION = 2
+VERSION = 1
 TITULOS = {"on": "Semáforos encendidos", "off": "Semáforos apagados", "agente": "Agente"}
 
 

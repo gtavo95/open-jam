@@ -4,7 +4,7 @@
 // cambiar con ?datos=<url>, p. ej. ?datos=fixtures/mini/.
 
 import { ErrorDatos, pedir } from "./errores.js";
-import { MANIFEST_LEGADO, normalizarEscenario, normalizarRed, validarManifest } from "./legado.js";
+import { normalizarEscenario, normalizarRed, validarManifest } from "./formato.js";
 import { crearCargador } from "./ventanas.js";
 import { crearDecodificador } from "./trabajador.js";
 
@@ -33,16 +33,10 @@ export function crearFuente(base = baseDatos()) {
   /** @type {Red | null} */
   let red = null;
 
-  /** manifest.json; si no existe, el formato viejo (on.json/off.json) */
+  /** manifest.json */
   async function cargarManifest() {
     const u = url("manifest.json");
-    try {
-      manifest = validarManifest(await pedir(u, "json"), u);
-    } catch (e) {
-      if (!(e instanceof ErrorDatos) || e.tipo !== "faltante") throw e;
-      console.warn(`${u} no existe: se usa el formato viejo (on.json + on.bin)`);
-      manifest = MANIFEST_LEGADO;
-    }
+    manifest = validarManifest(await pedir(u, "json"), u);
     return manifest;
   }
 
@@ -76,10 +70,7 @@ export function crearFuente(base = baseDatos()) {
     const esc = m.escenarios.find((e) => e.id === id);
     if (!esc) throw new ErrorDatos("formato", `el manifest no tiene el escenario "${id}"`);
     const u = url(esc.meta);
-    const meta = normalizarEscenario(esc, await pedir(u, "json"), red?.corredores ?? [], {
-      legado: m.version === 1,
-      url: u,
-    });
+    const meta = normalizarEscenario(esc, await pedir(u, "json"), red?.corredores ?? [], u);
     const cargador = crearCargador(meta.ventanas, (v) => decodificador.decodificar(v, url(v.archivo)));
     return { meta, cargador };
   }
