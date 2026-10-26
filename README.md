@@ -1,4 +1,4 @@
-# Tráfico de Ciudad de Guatemala
+# open-jam: tráfico de Ciudad de Guatemala
 
 Simulación en SUMO de la hora pico de la mañana (salidas de 6 a 7 h, 90 min simulados) en el área ampliada alrededor de la zona 10 (zonas 1, 4, 5, 9, 10, 13, 14, 15, Roosevelt hasta Mixco, Periférico y Belice), con un visor 3D en el navegador. El objetivo es probar si un agente que enciende o apaga los semáforos de cada corredor cada 15 minutos administra mejor el tráfico que la configuración actual.
 
@@ -69,4 +69,7 @@ Svelte 5 y Three.js. Lee `manifest.json`, la red, la escena y las ventanas de ca
 
 ## Licencias de datos
 
-Calles, edificios y zonas: © colaboradores de OpenStreetMap (ODbL). Relieve: AWS Terrain Tiles (SRTM y otras fuentes).
+El código está bajo la licencia MIT (`LICENSE`). Los datos de terceros tienen sus propias licencias:
+
+- **`data/osm/`**: datos de [OpenStreetMap](https://www.openstreetmap.org/copyright), © colaboradores de OpenStreetMap, disponibles bajo la [Open Database License (ODbL) 1.0](https://opendatacommons.org/licenses/odbl/1-0/). Los dos se descargan de Overpass: `area.osm.xml` es el extracto del área (`scripts/bajar_osm.sh`) y `polos.json`, los lugares que atraen viajes en la mañana (colegios, universidades, hospitales, oficinas y comercios; `polos()` en `open_jam/demanda.py`). Las bases de datos derivadas de ellos (la red de SUMO y `data/corredores.json`) se distribuyen bajo la misma licencia, y el visor muestra la atribución a OpenStreetMap.
+- **Relieve**: AWS Terrain Tiles (SRTM y otras fuentes).
