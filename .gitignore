@@ -1,0 +1,21 @@
+.venv/
+__pycache__/
+sim/smoke.*
+out/
+sim/candidatas.rou.xml
+viz/data/
+rust/*/target/
+*.so
+.pytest_cache/
+# generados: scripts/build_net.sh y python -m traffic_flow.demanda
+sim/area.net.xml
+sim/*.rou.xml
+sim/conteos_am.xml
+sim/tls_webster.add.xml
+viz/data.js
+web/node_modules/
+web/dist/
+sim/atraccion.dst.xml
+sim/landmarks.txt
+data/cache/
+sim/*.huella
