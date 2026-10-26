@@ -1,0 +1,1 @@
+{"version":2,"red":"red.json","escena":"escena.json","terreno":"terreno.bin","escenarios":[{"id":"on","titulo":"Semáforos encendidos","meta":"on/meta.json"},{"id":"off","titulo":"Semáforos apagados","meta":"off/meta.json"},{"id":"agente","titulo":"Agente","meta":"agente/meta.json"}]}

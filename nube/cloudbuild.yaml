@@ -1,0 +1,5 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: [build, -f, nube/Dockerfile, -t, $_IMAGEN, .]
+images: [$_IMAGEN]
+timeout: 1800s
