@@ -56,6 +56,8 @@ Una política (`open_jam/politicas.py`) recibe cada `cada` segundos una observac
 | `open_jam/politicas.py` | on, off, `Agente`, validación de decisiones y `aplicar()` |
 | `open_jam/corredores.py` | corredores del agente: generación, carga y validación contra la red |
 | `open_jam/fluidez.py` | fluidez y tiempo parado por corredor y periodo |
+| `open_jam/malla.py` | la red como malla de semáforos: matrices de incidencia y vecinos, y estado de cada tramo en vivo |
+| `open_jam/tiempos.py` | verdes de cada semáforo: leerlos y cambiarlos sin saltarse amarillos |
 | `open_jam/metricas.py` | lee las estadísticas de SUMO |
 | `open_jam/demanda.py` | demanda de hora pico, conductores y landmarks |
 | `open_jam/escena.py` | relieve (AWS Terrain Tiles), edificios y zonas (OSM) para el visor |
