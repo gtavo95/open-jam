@@ -18,6 +18,7 @@ Métricas de cada tramo, en toda la red:
 
 Uso:
   uv run python -m open_jam.ab presion --conjunto ajuste --paralelo 4
+  MODEL_API_KEY=... uv run python -m open_jam.ab muse --conjunto ajuste
 Resultados: out/ab/<fecha>-<controlador>-<conjunto>.jsonl, una línea por caso y controlador.
 """
 
@@ -75,6 +76,10 @@ class Controlador:
     def decidir(self, lectura) -> dict[str, list[float]]:
         return {}
 
+    def resumen(self) -> dict[str, Any]:
+        """Lo que el controlador quiera sumar a la fila de resultados (llamadas, tokens...)."""
+        return {}
+
 
 class MaxPresion(Controlador):
     """Ejemplo: reparte el verde del ciclo según la presión de cada fase.
@@ -124,7 +129,15 @@ class MaxPresion(Controlador):
         return res
 
 
-CONTROLADORES = {"webster": Controlador, "presion": MaxPresion}
+NOMBRES = ("webster", "presion", "muse")
+
+
+def crear(nombre: str) -> Controlador:
+    if nombre == "muse":
+        from .muse import ControladorMuse  # perezoso: muse.py importa este módulo
+
+        return ControladorMuse()
+    return {"webster": Controlador, "presion": MaxPresion}[nombre]()
 
 
 def archivo_estado(base: Corrida, caso: Caso, out: Path) -> Path:
@@ -163,7 +176,7 @@ def tramo(base: Corrida, caso: Caso, nombre: str, out: Path) -> dict[str, Any]:
 
     c = base.con(seed=caso.seed, escala=caso.escala, hasta=caso.t0 + caso.dur)
     malla = Malla.desde_net(sumolib.net.readNet(str(c.net)))
-    ctrl = CONTROLADORES[nombre]()
+    ctrl = crear(nombre)
     t_real = time.perf_counter()
     sumo.start(c.args(desde=caso.t0, estado=archivo_estado(base, caso, out)))
     try:
@@ -193,7 +206,7 @@ def tramo(base: Corrida, caso: Caso, nombre: str, out: Path) -> dict[str, Any]:
         sumo.close()
     return asdict(caso) | {"controlador": nombre, "parado_h": round(parado / 3600, 2), "llegaron": llegaron,
                            "cola_final": cola, "teleports": teleports, "cambios": cambios,
-                           "pared_s": round(time.perf_counter() - t_real, 1)}
+                           **ctrl.resumen(), "pared_s": round(time.perf_counter() - t_real, 1)}
 
 
 def _preparar(args):
@@ -234,7 +247,7 @@ def comparar(filas: list[dict[str, Any]], a: str, b: str) -> dict[str, dict[str,
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("controlador", choices=sorted(set(CONTROLADORES) - {"webster"}))
+    ap.add_argument("controlador", choices=NOMBRES[1:])
     ap.add_argument("--conjunto", choices=sorted(CONJUNTOS), default="ajuste")
     ap.add_argument("--dur", type=int, default=DUR_S)
     ap.add_argument("--paralelo", type=int, default=1)
