@@ -39,6 +39,14 @@ def verdes(sumo, tls: str) -> list[float]:
     return [f["duracion"] for f in fases(sumo, tls) if f["verde"]]
 
 
+def movimientos(sumo, tls: str) -> list[set[tuple[str, str]]]:
+    """Por cada fase verde, en orden, los (tramo de entrada, tramo de salida) que tienen verde."""
+    enlaces = sumo.trafficlight.getControlledLinks(tls)  # por índice de señal: [(carril in, carril out, vía)]
+    tramo = sumo.lane.getEdgeID
+    return [{(tramo(a), tramo(b)) for i, s in enumerate(f["estado"]) if s in "Gg" for a, b, _ in enlaces[i]}
+            for f in fases(sumo, tls) if f["verde"]]
+
+
 def validar(sumo, tls: str, nuevos: Any) -> list[float]:
     """`nuevos` como lista de floats si sirve para `tls`; si no, ValueError o TypeError con el motivo."""
     if tls not in sumo.trafficlight.getIDList():

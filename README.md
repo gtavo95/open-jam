@@ -64,6 +64,7 @@ Una política (`open_jam/politicas.py`) recibe cada `cada` segundos una observac
 | `open_jam/export.py` | trayectorias por ventanas de 15 min en binario, red y manifest |
 | `open_jam/trayectos.py` | simplificación de trayectorias (Python, o Rust si está compilado) |
 | `open_jam/bench.py` | benchmarks: cada variante en su proceso |
+| `open_jam/ab.py` | A/B de controladores: el mismo tramo, desde el mismo estado, con Webster y con el agente |
 
 ## Visor (`web/`)
 

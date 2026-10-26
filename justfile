@@ -39,6 +39,10 @@ test:
 web:
     cd web && pnpm dev
 
+# A/B contra Webster desde el mismo estado: just ab presion --conjunto ajuste --paralelo 4
+ab controlador *flags:
+    uv run python -m open_jam.ab {{controlador}} {{flags}}
+
 bench *flags:
     uv run python -m open_jam.bench {{flags}}
 
