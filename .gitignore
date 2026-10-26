@@ -7,7 +7,7 @@ viz/data/
 rust/*/target/
 *.so
 .pytest_cache/
-# generados: scripts/build_net.sh y python -m traffic_flow.demanda
+# generados: scripts/build_net.sh y python -m open_jam.demanda
 sim/area.net.xml
 sim/*.rou.xml
 sim/conteos_am.xml

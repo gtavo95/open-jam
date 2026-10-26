@@ -1,0 +1,18 @@
+[package]
+name = "trayectos_rs"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "trayectos_rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.25", features = ["extension-module", "abi3-py312"] }
+numpy = "0.25"
+rayon = "1.10"
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+opt-level = 3

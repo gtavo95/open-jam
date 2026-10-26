@@ -1,0 +1,21 @@
+# Lo que sube `gcloud builds submit` para la imagen de nube/Dockerfile.
+*
+!pyproject.toml
+!uv.lock
+!data/
+data/*
+!data/corredores.json
+!data/osm/
+data/osm/*
+!data/osm/polos.json
+!sim/
+sim/*
+!sim/area.net.xml
+!sim/am_calibrado.rou.xml
+!sim/am_fondo.rou.xml
+!sim/vtypes.add.xml
+!sim/tls_webster.add.xml
+!sim/landmarks.txt
+!open_jam/
+!nube/
+__pycache__/

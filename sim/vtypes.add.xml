@@ -1,0 +1,10 @@
+<additional>
+    <vTypeDistribution id="mix">
+        <vType id="carro" vClass="passenger" probability="0.70" minGap="1.5" tau="1.0" sigma="0.6" impatience="0.5"
+               lcAssertive="1.5" lcSpeedGain="1.5" jmTimegapMinor="0.5" jmIgnoreKeepClearTime="5"/>
+        <vType id="moto" vClass="motorcycle" probability="0.25" minGap="0.5" tau="1.0" sigma="0.6" impatience="0.8"
+               lcAssertive="2" lcPushy="0.5" jmTimegapMinor="0.3" jmIgnoreKeepClearTime="2"/>
+        <vType id="bus" vClass="bus" probability="0.03" minGap="2" impatience="0.3" lcAssertive="1.5"/>
+        <vType id="camion" vClass="truck" probability="0.02" minGap="2" impatience="0.3"/>
+    </vTypeDistribution>
+</additional>

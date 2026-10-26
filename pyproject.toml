@@ -1,0 +1,33 @@
+[project]
+name = "open-jam"
+version = "0.1.0"
+description = "Simulación de la hora pico de Ciudad de Guatemala (SUMO) con control de semáforos"
+readme = "README.md"
+requires-python = ">=3.12"
+# SUMO, libsumo, sumolib y traci van fijos a la misma versión: traci habla un protocolo
+# que cambia entre versiones y libsumo trae su propio SUMO compilado.
+dependencies = [
+    "certifi>=2026.7.22",
+    "eclipse-sumo==1.28.0",
+    "libsumo==1.28.0",
+    "numpy>=2.5.3",
+    "pillow>=13.0.0",
+    "pyarrow>=26.0.0",
+    "pyproj>=3.8.0",
+    "rtree>=1.4.1",
+    "scipy>=1.18.1",
+    "sumolib==1.28.0",
+    "traci==1.28.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "maturin>=1.8,<2",
+    "brotli>=1.2.0",
+    "ruff>=0.17.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
